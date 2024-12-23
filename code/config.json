@@ -10,7 +10,7 @@
   "receive": {
     "parameters": {
       "log_file_name": "NTPPacketBurstChannelReceiver.log",
-      "zero_packet_count": 3,
+      "zero_packet_count": 2,
       "one_packet_count": 4
     }
   }
