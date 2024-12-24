@@ -87,10 +87,7 @@ class MyCovertChannel(CovertChannelBase):
             # Detect start of a new burst
             if last_packet_time is not None:
                 print(f"Time passed: {current_time - last_packet_time}")
-            if (
-                last_packet_time is None
-                or current_time - last_packet_time > idle_time + idle_time / 4
-            ):
+            if last_packet_time is None or current_time - last_packet_time > idle_time:
                 print(
                     f"New burst detected. Previous burst count: {current_burst_count}"
                 )
@@ -129,6 +126,7 @@ class MyCovertChannel(CovertChannelBase):
         sniff(
             prn=sniff_handler,
             iface="eth0",
+            filter="udp and port 123",
             stop_filter=stop_filter,
         )
 
