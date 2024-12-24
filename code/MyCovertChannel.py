@@ -37,11 +37,12 @@ class MyCovertChannel(CovertChannelBase):
         binary_message = self.generate_random_binary_message_with_logging(
             log_file_name, min_length=40, max_length=40
         )
-        idle_time = self.calculate_delay("receiver") * 4
+        idle_time = self.calculate_delay("receiver") * 3
         # message = "abcdefghiwjk."
         # binary_message = self.convert_string_message_to_binary(message)
 
         # print(f"Sending message: {message} with binary message {binary_message}")
+        i = 0
 
         for bit in binary_message:
             pkt_list = []
@@ -58,9 +59,11 @@ class MyCovertChannel(CovertChannelBase):
 
             # Send the packets in the burst
             for pkt in pkt_list:
+                i += 1
                 super().send(pkt)
 
         # Send a final packet so receiver finishes its processing
+        print(f"{i} packets sent.")
         time.sleep(idle_time)
         super().send(IP(dst="receiver") / UDP() / NTP())
         time.sleep(idle_time)
@@ -74,14 +77,15 @@ class MyCovertChannel(CovertChannelBase):
         decoded_message = ""
         current_burst_count = 0
         last_packet_time = None
-        idle_time = self.calculate_delay("sender") * 4
+        idle_time = self.calculate_delay("sender") * 3
         stop_sniffing = False
-
+        i = 0
         print(f"Idle time for burst detection: {idle_time}")
 
         def sniff_handler(pkt):
-            nonlocal current_burst_count, last_packet_time, received_bits, decoded_message, stop_sniffing
+            nonlocal current_burst_count, last_packet_time, received_bits, decoded_message, stop_sniffing, i
             current_time = time.time()
+            i += 1
             # print(f"Received packet at {current_time}")
 
             # Detect start of a new burst
@@ -129,6 +133,6 @@ class MyCovertChannel(CovertChannelBase):
             filter="udp and port 123",
             stop_filter=stop_filter,
         )
-
+        print(f"{i} packets received.")
         print(f"Final decoded message: {decoded_message}")
         self.log_message(decoded_message, log_file_name)
