@@ -1,6 +1,6 @@
 services:
   receiver:
-    build: 
+    build:
       dockerfile: docker/Dockerfile
       context: .
     image: covertovert:latest
@@ -15,9 +15,9 @@ services:
       - ./code:/app:rw
     networks:
       covertovert_net:
-        ipv4_address: 172.18.0.3
+        ipv4_address: 172.30.0.3
   sender:
-    build: 
+    build:
       dockerfile: docker/Dockerfile
       context: .
     image: covertovert:latest
@@ -30,11 +30,11 @@ services:
       - ./code:/app:rw
     networks:
       covertovert_net:
-        ipv4_address: 172.18.0.2
+        ipv4_address: 172.30.0.2
 
 networks:
   covertovert_net:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.18.0.0/24
+        - subnet: 172.30.0.0/24
